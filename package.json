@@ -1,0 +1,30 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.8",
+        "axios": "^1.6.1",
+        "bootstrap": "^5.3.3",
+        "laravel-vite-plugin": "^0.8.0",
+        "sass": "^1.77.1",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "chart.js": "^4.4.3",
+        "datatables": "^1.10.18",
+        "es6-docready": "^1.0.1",
+        "font-awesome": "^4.7.0",
+        "gumshoejs": "^5.1.2",
+        "jquery": "^3.7.1",
+        "jquery-animated-headlines": "^1.0.0",
+        "jquery-parallax.js": "^1.5.0",
+        "normalize.css": "^8.0.1",
+        "swiper": "^11.1.3",
+        "tiny-slider": "^2.9.4",
+        "waypoints": "^4.0.1"
+    }
+}
