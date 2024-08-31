@@ -2,7 +2,8 @@
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
 // Font Awesome
-@import 'font-awesome';
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import '@fortawesome/fontawesome-free/scss/regular.scss';
 
 // Variables
 @import 'variables';
@@ -14,13 +15,22 @@
 @import "normalize.css";
 
 // dataTables
-@import 'datatables/media/css/jquery.dataTables.min.css';
+@import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
 // animated headlines
 @import "jquery-animated-headlines/dist/css/jquery.animatedheadline.css";
+
+//select2
+@import "select2/dist/css/select2.css";
+
+//Quill
+@import "quill//dist/quill.snow.css";
 
 // swiper
 @import 'swiper/css';
 
 //tiny slider
 @import "tiny-slider/dist/tiny-slider.css";
+
+//make tooltips less stark
+.tooltip{   --bs-tooltip-bg: #444 !important; }

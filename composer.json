@@ -12,9 +12,13 @@
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.5",
-        "livewire/livewire": "^3.4"
+        "livewire/livewire": "^3.4",
+        "sentry/sentry-laravel": "^4.7",
+        "spatie/laravel-analytics": "^5.4",
+        "spatie/laravel-image-optimizer": "^1.8"
     },
     "require-dev": {
+        "enlightn/enlightn": "^2.10",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",

@@ -7,6 +7,7 @@
 .env.backup
 .env.production
 .phpunit.result.cache
+service-account-credentials.json
 Homestead.json
 Homestead.yaml
 auth.json
@@ -16,3 +17,7 @@ yarn-error.log
 /.idea
 /.vscode
 /resources/legal
+/resources/invoice/includes
+/resources/home/includes
+/resources/views/layouts/includes/meta
+.DS_Store

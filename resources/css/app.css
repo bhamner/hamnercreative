@@ -1,3 +1,6 @@
+
+/******** GENERAL STYLES ********/
+
 .bi {
   display: inline-block;
   width: 1rem;
@@ -8,24 +11,20 @@
   fill: white;
 }
 
-/*
- * Sidebar
- */
+/******** SIDEBAR ********/
   
 @media (min-width: 768px) {
-
-  .sidebar{
-     min-height: 100vh;
-  }
-  
-  .sidebar .offcanvas-lg {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 48px;
-  }
-  .navbar-search {
-    display: block;
-  }
+    .sidebar{
+       min-height: 100vh;
+    }
+    .sidebar .offcanvas-lg {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 48px;
+    }
+    .navbar-search {
+      display: block;
+    }
 }
 
 .sidebar .nav-link {
@@ -40,10 +39,7 @@
   font-size: .75rem;
 }
 
-/*
- * Navbar
- */
-
+/******** NAVBAR ********/
 .navbar-brand {
   padding-top: .75rem;
   padding-bottom: .75rem;
@@ -54,3 +50,84 @@
 .navbar .form-control {
   padding: .75rem 1rem;
 }
+
+/******** FORMS ********/
+::placeholder {
+  opacity: 0.5 !important;
+}
+
+::-ms-input-placeholder { /* Edge 12 -18 */
+  opacity: 0.5;
+}
+
+
+
+/******** SELECT2 OVERRIDES ********/
+
+/* make select2 responsive */
+.select2-container{
+  display:block;
+  max-width:100% !important;
+}
+/* emulate boostrap input styles */
+.select2-container .select2-selection--single{
+  height:37px;
+  border: 1px solid rgb(222, 226, 230);
+  border-radius: 6px;
+  background-clip: padding-box;
+  background-color:transparent;
+}
+/* emulate boostrap input styles */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height:1.6;
+}
+/* emulate boostrap input styles */
+.select2-container .select2-selection--single .select2-selection__rendered {
+  background-color:transparent;
+  padding: 0.375rem 0.75rem;
+  width:100% !important;
+}
+/* center arrow vertically */
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+  margin-top:2px;
+}
+ 
+/******** DATATABLES OVERRIDES ********/
+
+/* position export button next to search*/
+div.dt-container div.dt-search, div.dt-container div.dt-buttons { 
+  display:inline-block  !important;
+  margin: 5px;
+}
+/* remove search and download on small screens */
+@media (max-width: 768px) { 
+  div.dt-container div.dt-search, div.dt-container div.dt-buttons { 
+    display: none !important;
+  }
+ }
+
+/* modernize the row padding */
+table.dataTable th, table.dataTable td{
+  font-size:14px;
+  line-height:24px;
+  padding:12px;
+  white-space:nowrap;
+}
+table.table.dataTable  th{
+  background-color:#efefef; 
+}
+/* modernize the sort arrows */
+table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:before,
+table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order:after,
+table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order:before,
+table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order:after{
+ opacity:0;
+}
+table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before,
+table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after{
+  opacity:0.3;
+}
+ 
+
+ 
+  

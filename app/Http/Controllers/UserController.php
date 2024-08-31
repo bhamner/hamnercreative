@@ -39,10 +39,11 @@ class UserController extends Controller
         $confirmation_code = substr(Auth::user()->vendor_id, 0, 5);
 
         $validated = $request->validate([
-            'deleteConfirmationCode' => 'required|size:5|in:['.$confirmation_code.']',
+            'deleteConfirmationCode' => 'required|in:'.$confirmation_code.'|numeric',
         ]);
 
-        dd($user);
+        $user->clients()->detach();
+        $user->delete();
         Auth::logout();
         $request->session()->invalidate();
         return  redirect('/');

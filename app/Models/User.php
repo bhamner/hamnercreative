@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -22,7 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'vendor_id',
-        'avatar'
+        'avatar',
+        'deleted_at'
     ];
 
     /**
@@ -42,4 +44,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * The clients that belong to the user.
+     */
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(Client::class);
+    }
 }

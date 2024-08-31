@@ -474,6 +474,15 @@ button:focus {
     transition: all 0.6s ease-in;
     color: #707070;
 }
+.item .overlay p{
+    top: 10%;
+    left: 10%;
+    position: absolute;
+    color: #fff;
+    font-size: 14pt;
+    letter-spacing: 2pt;
+}
+
 
 .item .overlay {
     position: relative;
@@ -889,16 +898,22 @@ footer a{
     @media only screen and (max-width : 768px) {
         .header-wrapper img {
             width: 50%;
+        }   
+        .navbar .navbar-nav, .navbar {
+            background-color: rgba(0,0,0,0.9);
         }
-
         .navbar .navbar-nav>li>a {
             margin-left: 30px;
             margin-bottom: 15px;
         }
         .navbar-nav .active>.nav-link, .navbar-nav .nav-link.active, .navbar-nav .nav-link.show, .navbar-nav .show>.nav-link {
-            border-bottom: 2px solid #fff;
+            border-bottom: none;
             width: 15px;
             padding-bottom: 20px;
+        }
+        .navbar-nav .dropdown-menu,.navbar-nav .dropdown-menu a{
+            padding:15px 30px;
+
         }
         .inbody {
             padding-bottom: 10px;

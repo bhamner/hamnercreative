@@ -1,4 +1,4 @@
-@extends('layouts.public')
+@extends('layouts.home')
 @section('title') {{ config('app.name') }} @stop
 @section('content')
 
@@ -18,9 +18,9 @@
             <div class="row">
               <div class="col-lg-12 col-xs-12">
                <!-- Navbar -->
-               @include('navigation.public')
+               @include('home.navigation')
                <!-- Header Section -->
-               @include('components.public.header')
+               @include('home.header')
               </div>   
             </div>
          </div>
@@ -28,13 +28,13 @@
 
       <div class="main-wrapper">
          <!-- About Section -->
-         @include('components.public.about')   
+         @include('home.about')   
          <!-- Portfolio Section -->
-         @include('components.public.portfolio')
+         @include('home.portfolio')
          <!-- Contact Section -->
-         @include('components.public.contact_form')
+         @include('home.contact_form')
          <!-- Footer Section -->
-        @include('footer.public')
+        @include('home.footer')
       </div>
       
 @endsection

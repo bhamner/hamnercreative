@@ -8,21 +8,21 @@
                   <i class="fa fa-phone-square" aria-hidden="true"></i>
                   <h4>Phone:</h4>
                   <a href="#">
-                     <p>8 700 500 100</p>
+                     <p>{{ config('contact.phone') }}</p>
                   </a>
                </div>
                <div class="contact-wrap">
                   <i class="fa fa-envelope" aria-hidden="true"></i>
                   <h4>Email:</h4>
                   <a href="#">
-                     <p>dummy@mail.com</p>
+                     <p>{{ config('contact.email') }}</p>
                   </a>
                </div>
                <div class="contact-wrap">
                   <i class="fa fa-map-marker" aria-hidden="true"></i>
                   <h4>Address:</h4>
                   <a href="#">
-                     <p>USA New-York 72 STREET</p>
+                     <p>{{ config('contact.address') }}</p>
                   </a>
                </div>
             </div>

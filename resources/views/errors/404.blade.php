@@ -1,5 +1,5 @@
-@extends('layouts.public')
-@section('title') 404 @stop
+@extends('layouts.home')
+@section('title') {{ config('app.name') }} - Page Not Found @stop
 @section('content')
 
 <div class="header-fullscreen" style="background: url({{ Vite::asset('resources/images/space-travel-loop.gif') }}); background-size: cover;">

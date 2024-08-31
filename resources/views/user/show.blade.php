@@ -1,28 +1,21 @@
 @extends('layouts.app')
-@section('title') Hamner Creative @stop
+@section('title') {{ config('app.name') }} - User Account @stop
 @section('content')
 
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2"> </h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete your Account</button>
-          </div>
-        </div>
-      </div>
 
 
+  <div class="pt-3 mt-3 pb-2 mb-3">
       <h2>User Account </h2>
       <div>
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
       </div>
       <div>
         <div class="card mb-3" style="max-width: 540px;">
@@ -41,5 +34,15 @@
           </div>
         </div>
       </div>
-    @include('user.delete_confirmation_modal')
+</div>
+
+      <div class="d-flex  flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-top">
+
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteConfirmation">Delete your Account</button>
+          </div>
+        </div>
+      </div>
+      @include('user.delete_confirmation_modal')
 @endsection

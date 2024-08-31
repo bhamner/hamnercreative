@@ -28,7 +28,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware(['guest','throttle:60,1'], ['except' => 'logout']);
     }
 
 
@@ -77,6 +77,20 @@ class AuthController extends Controller
      */
     protected function syncUserObject($vendor_response): \App\Models\User
     {
+
+        $previous_account = \App\Models\User::withTrashed()
+            ->where('vendor_id',$vendor_response->id)
+            ->first();
+
+        if( $previous_account ){
+           $previous_account->update([
+                'name' => $vendor_response->name, 
+                'email' => $vendor_response->email, 
+                'avatar' => $vendor_response->avatar,
+                'deleted_at' => null,
+            ]);
+           return $previous_account;
+        }
 
         $user = \App\Models\User::updateOrCreate([
             'vendor_id' => $vendor_response->id
