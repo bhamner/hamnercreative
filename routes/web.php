@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*TODO 
-HC- contact form
-HC-Portfolio images
-HC- page titles 
-
-*/
 
 //Home
 Route::view('/','home.welcome')->name('welcome');
