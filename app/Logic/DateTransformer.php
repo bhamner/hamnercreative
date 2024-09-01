@@ -33,7 +33,7 @@ class DateTransformer
 
     public function setData($request): self
     {
-       
+
         $this->data = $request->has('date') ? $request->get('date') : $this->default;
         $this->setApprovedDates()->setPeriod()->setRange();
         return $this;
@@ -42,7 +42,6 @@ class DateTransformer
     public function setPeriod(): self
     {
         $dates = $this->approved_dates[ $this->data ];
-        dd($dates);
         $limited_start_date = strtotime($dates[0]) < strtotime($dates[1].' -90 days') ?  strtotime($dates[1].' -90 days') : $dates[0];
         $this->period =  Period::create( Carbon::parse($limited_start_date) , Carbon::parse($dates[1]) );
         return $this;
