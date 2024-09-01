@@ -33,6 +33,7 @@ class DateTransformer
 
     public function setData($request): self
     {
+       
         $this->data = $request->has('date') ? $request->get('date') : $this->default;
         $this->setApprovedDates()->setPeriod()->setRange();
         return $this;
@@ -41,6 +42,7 @@ class DateTransformer
     public function setPeriod(): self
     {
         $dates = $this->approved_dates[ $this->data ];
+        dd($dates);
         $limited_start_date = strtotime($dates[0]) < strtotime($dates[1].' -90 days') ?  strtotime($dates[1].' -90 days') : $dates[0];
         $this->period =  Period::create( Carbon::parse($limited_start_date) , Carbon::parse($dates[1]) );
         return $this;
@@ -60,11 +62,11 @@ class DateTransformer
     {
         $end = Carbon::yesterday()->toDateTimeString();
         $this->approved_dates =  [
-            'last month' => [ Carbon::now()->subMonth(1)->startOfMonth()->toDateTimeString(), Carbon::now()->startOfMonth()->toDateTimeString() ],
-            'this month' => [ Carbon::now()->startOfMonth()->toDateTimeString(), $end ],
-            'this year' =>  [ Carbon::now()->startOfYear()->toDateTimeString(), $end ],
-            'last year' =>  [ Carbon::now()->subYears(1)->startOfYear()->toDateTimeString(),Carbon::now()->startOfYear()->toDateTimeString() ],
-            'all time' =>   [ Carbon::now()->startOfCentury()->toDateTimeString(), $end ]
+            'last month' => [ Carbon::yesterday()->subMonth(1)->startOfMonth()->toDateTimeString(), Carbon::now()->startOfMonth()->toDateTimeString() ],
+            'this month' => [ Carbon::yesterday()->startOfMonth()->toDateTimeString(), $end ],
+            'this year' =>  [ Carbon::yesterday()->startOfYear()->toDateTimeString(), $end ],
+            'last year' =>  [ Carbon::yesterday()->subYears(1)->startOfYear()->toDateTimeString(),Carbon::now()->startOfYear()->toDateTimeString() ],
+            'all time' =>   [ Carbon::yesterday()->startOfCentury()->toDateTimeString(), $end ]
         ];
         return $this;
     }
