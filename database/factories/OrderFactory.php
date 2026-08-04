@@ -18,10 +18,9 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'=> rand(1,1000),
-            'name' => fake()->name(),
-            'client_id' => 146,
-            'status' => 'open'
+            'name' => fake()->sentence(3),
+            'client_id' => \App\Models\Client::factory(),
+            'status' => 'open',
         ];
     }
 }

@@ -1,31 +1,26 @@
-<?php 
+<?php
+
 namespace App\Http\Middleware;
 
+use App\Services\DateRangeService;
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
+class DateFilter
+{
+    public function __construct(private DateRangeService $dateRangeService)
+    {
+    }
 
-class DateFilter{
- 
- 	/**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-	public function handle($request, Closure $next): Response
-	{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $dates = $this->dateRangeService->resolve($request);
 
-        $dates = \App\Logic\DateTransformer::getInstance()->setData($request)->build();
+        $request->merge(compact('dates'));
+        View::share(compact('dates'));
 
-  	   //add to request to share with controller
-        $request->merge( compact('dates') );
- 
-        //share with view
-        \View::share( compact('dates') );
-		 
-	   return $next($request);
-	}
- 
-
-
+        return $next($request);
+    }
 }

@@ -21,3 +21,5 @@ yarn-error.log
 /resources/home/includes
 /resources/views/layouts/includes/meta
 .DS_Store
+.cursor/
+.cursorrules

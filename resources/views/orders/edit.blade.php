@@ -8,7 +8,7 @@
 
       <h2>{{ $order ? 'Edit Order': 'New Order' }}</h2>
      
-      <form method="POST" action="/order/update" class="form">
+      <form method="POST" action="{{ route('orders.store') }}" class="form">
             @csrf
             @if( $order ) <input type="hidden" name="order_id" value="{{ $order->id }}" /> @endif
             <div class="row g-3 px-5 py-3">
@@ -18,19 +18,24 @@
                         @if( $order ) value="{{ $order->name }}" @endif required/>
                   </div>
 
-                  <div class="col-md-6">
+                  <div class="col-md-4">
+                        <label for="order_date_input" class="form-label">Date</label>
+                        <input type="date" class="form-control @if($errors->has('order_date')) is-invalid @endif" id="order_date_input" name="order_date"
+                        value="{{ old('order_date', $order ? $order->created_at->format('Y-m-d') : now()->format('Y-m-d')) }}" required/>
+                  </div>
+                  <div class="col-md-4">
                         <label for="client_select" class="form-label">Client</label>
                         <select id="client_select" name="order_client" class="form-select select2" required> 
                         @foreach( $clients as $opt )
-                              <option value="{{ $opt->id }}" @if( $order && $order->client->id == $opt->id) selected @endif> {{ $opt->name }}</option>
+                              <option value="{{ $opt->id }}" @if( (int) old('order_client', $order?->client_id) === $opt->id) selected @endif> {{ $opt->name }}</option>
                         @endforeach
                         </select>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                         <label for="status_select" class="form-label">Status</label>
                         <select id="status_select" name="order_status" class="form-select select2" required>
                         @foreach( [ 'open','paid' ] as $opt )
-                              <option value="{{ $opt }}" @if( $order && $order->client->status == $opt) selected @endif> {{ $opt }}</option>
+                              <option value="{{ $opt }}" @if( old('order_status', $order?->status) === $opt) selected @endif> {{ $opt }}</option>
                         @endforeach
                         </select>
                   </div>

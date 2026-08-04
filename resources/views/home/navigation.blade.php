@@ -6,32 +6,15 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
          <ul class="navbar-nav ms-auto mt-2 mt-lg-0" id="navbar-nav">
+            @auth
             <li class="nav-item">
-               <a class="nav-link" href="#header">HOME</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link" href="#about">ABOUT</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link" href="#work">WORK</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link" href="#form">CONTACT</a>
-            </li>
-            @if(!Auth::guest())
-            <li class="nav-item dropdown">
-               <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="fa fa-user"></i> {{ Auth::user()->name }}</a>
-               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="/dashboard">DASHBOARD</a>
-                  <a class="dropdown-item" href="/user">ACCOUNT</a>
-                  <a class="dropdown-item" href="/logout">LOGOUT</a>
-               </ul>
+               <a href="{{ ($homeClient = Auth::user()->clients->first()) ? route('metrics.show', $homeClient) : '/setup' }}" class="btn btn-dark">{{ Auth::user()->name }}</a>
             </li>
             @else
             <li class="nav-item">
-               <a href="/auth/google" class="btn  btn-dark">SIGN IN </a>
+               <a href="/auth/google" class="btn btn-dark">SIGN IN</a>
             </li>
-            @endif
+            @endauth
          </ul>
       </div>
    </div>

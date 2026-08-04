@@ -2,17 +2,16 @@
 @section('title') {{ config('app.name') }} - Content @stop
 @section('content')
 
-      @include('navigation.filters')
       @include('includes.response_alerts')
+
       
-      @if( $request->get('client') )
       <div class="text-end my-4">
-         <a class="btn btn-outline-primary" href="/content/{{ $request->get('client')->id }}/edit">
+         <a class="btn btn-outline-primary" href="{{ route('content.edit', $client) }}">
             Create a New Item
         </a>
       </div>
-      @endif
-      <h2 class="text-md-start text-center">Website Content</h2> 
+      <h2 class="text-md-start text-center">{{ $client->name }} — Site content</h2>
+ 
       <div class="table-responsive mb-5 pb-3">
         <table class="table dataTable w-100" data-placeholder="No content" data-search="true" data-paginate="true" data-col="0" data-dir="asc">
           <thead>
@@ -27,7 +26,8 @@
           </thead>
           <tbody>
             @foreach($content as $item)
-            <tr class="clickable-row" data-href="/content/{{ $item->client->id }}/edit/{{ $item->id }}">
+            <tr class="clickable-row" data-href="{{ route('content.edit', [$item->client, $item]) }}">
+
               <td> {{ $item->name }}</td>
               <td> {{  strlen($item->description) > 50 ? substr($item->description,0,50).'...' : $item->description }}</td>
               <td> {{ $item->quantity_available }}</td>

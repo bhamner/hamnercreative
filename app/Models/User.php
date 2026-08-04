@@ -24,7 +24,6 @@ class User extends Authenticatable
         'email',
         'vendor_id',
         'avatar',
-        'deleted_at'
     ];
 
     /**
@@ -43,6 +42,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**

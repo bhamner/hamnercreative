@@ -17,10 +17,11 @@ class ServiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'order_id' => rand(100,200),
-            'quantity' => rand(1,5),
-            'rate'=> rand(100,200,2)
+            'name' => fake()->words(2, true),
+            'order_id' => \App\Models\Order::factory(),
+            'details' => fake()->sentence(),
+            'quantity' => fake()->numberBetween(1, 5),
+            'rate' => fake()->randomFloat(2, 50, 500),
         ];
     }
 }

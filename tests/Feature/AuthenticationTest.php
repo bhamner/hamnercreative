@@ -1,55 +1,31 @@
 <?php
 
-namespace Tests\Feature;
-
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-
-use Auth;
-
-use Tests\TestCase;
 use App\Models\User;
-use Laravel\Socialite\Facades\Socialite;
 
-class AuthenticationTest extends TestCase
-{
+beforeEach(function () {
+    $this->withoutVite();
+});
 
-    protected $user;
+it('redirects login attempt to the SSO provider', function () {
+    $this->get('/auth/google')->assertRedirect();
+});
 
-    protected function setUp(): void
-    {
-      parent::setUp();
-      $this->user = User::factory()->make();
-      $this->withoutVite();
-    }
+it('allows authenticated user to view metrics', function () {
+    mockAnalytics();
+    $user = createUserWithClient();
+    $client = $user->clients()->first();
 
-    /**
-     * test sso provider redirect
-     */
-    public function test_login_attempt_redirects_to_provider(): void
-    {
-        $this->get('/auth/google')
-             ->assertStatus(302);
-    }
+    $this->actingAs($user)->get(route('metrics.show', $client))->assertOk();
+});
 
-    /**
-     * test dashboard access
-     */
- 
-    public function test_user_can_view_dashboard_authenticated(): void
-    {
+it('redirects unauthenticated user away from metrics', function () {
+    $client = \App\Models\Client::factory()->create();
 
-        $this->actingAs($this->user);
-        $this->get('/dashboard')->assertStatus(200);
-    }
+    $this->get(route('metrics.show', $client))->assertRedirect('/');
+});
 
-    /**
-     * test dashboard access
-     */
- 
-    public function test_user_cannot_view_dashboard_unauthenticated(): void
-    {
-        $this->get('/dashboard')->assertRedirect('/');
-    }
-    
+it('rejects oauth callback without a valid state parameter', function () {
+    $this->withoutExceptionHandling();
 
-}
+    $this->get('/auth/callback');
+})->throws(\Laravel\Socialite\Two\InvalidStateException::class);

@@ -29,9 +29,14 @@ DocReady( () => {
 
     //Quill
     if ($('#quill').length ){
+        const quillEl = document.querySelector('#quill');
         const quill = new Quill("#quill", {
             theme: "snow",
           });
+        const initial = quillEl.dataset.initial ? JSON.parse(quillEl.dataset.initial) : '';
+        if (initial) {
+            quill.setText(initial);
+        }
         //append quill content to parent form on submit
         const form = document.querySelector('form');
         form.addEventListener('formdata', (event) => {

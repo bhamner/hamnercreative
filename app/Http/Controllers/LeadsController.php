@@ -2,39 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
-use Illuminate\View\View;
+use App\Models\Client;
+use App\Models\Lead;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 class LeadsController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     */
     public function __construct()
     {
-        $this->middleware(['auth','block.pending','filter.date','filter.client']);
+        $this->middleware(['auth', 'block.pending', 'filter.date', 'filter.client']);
     }
 
+    public function index(Request $request, Client $client): View
+    {
+        $this->authorize('view', $client);
 
-    /**
-     * Show list of all form generated leads for client
-     *
-     */
-    public function index( Request $request ): View 
-    {   
-        $gate = Gate::authorize('user_has_client',$request);
-        $leads= \App\Models\Lead::whereBetween('updated_at',$request->dates['params'])
-                                ->when($request->client, function($query) use ($request) {
-                                    return $query->where('client_id', $request->client->id);
-                                })->get();
+        $leads = Lead::query()
+            ->whereBetween('updated_at', $request->dates['params'])
+            ->where('client_id', $client->id)
+            ->get();
 
-        return view('leads.index',compact('leads'));
+        return view('leads.index', compact('leads', 'client'));
     }
-
-
 }

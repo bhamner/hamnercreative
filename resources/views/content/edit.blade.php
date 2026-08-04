@@ -7,17 +7,20 @@
       </div>
       @include('includes.response_alerts')
 
-      @if( $content ) 
+      @if( $content )
+      @can('delete', $content)
       <div class="text-end my-4 px-5">
-         <a class="btn btn-outline-danger" href="/content/delete/{{ $content->id }}" onclick="return confirm('Are you sure you want to delete this item? This cannot be undone.')">
-            Delete this item
-        </a>
+         <form method="POST" action="{{ route('content.delete', $content) }}" onsubmit="return confirm('Are you sure you want to delete this item? This cannot be undone.')">
+            @csrf
+            <button type="submit" class="btn btn-outline-danger">Delete this item</button>
+         </form>
       </div>
+      @endcan
       @endif
-      
+
       <h2>{{ $content ? 'Edit Item': 'New Item' }}</h2>
-     
-      <form method="POST" action="/content/update" class="form" enctype="multipart/form-data">
+
+      <form method="POST" action="{{ route('content.store') }}" class="form" enctype="multipart/form-data">
             @csrf
             @if( $content ) <input type="hidden" name="content_id" value="{{ $content->id }}" /> @endif
             <input type="hidden" name="client_id" value="{{ $client->id }}" />
@@ -26,30 +29,30 @@
                   <div class="col-12">
                         <label for="content_image" class="form-label">Image</label>
                         <br/>
-                        @if( $content )
-                        <img src="//{{ $content->image }}" name="content_image" class="img-thumbnail" alt="image">
+                        @if( $content && $content->image )
+                        <img src="{{ e($content->image) }}" class="img-thumbnail" alt="image">
                         <br/>
                         @endif
                         <input class="form-control" name="content_image" type="file" accept="image/*">
                   </div>
                   <div class="col-12">
                         <label for="name_input" class="form-label">Name</label>
-                        <input type="text" class="form-control @if($errors->has('content_name')) is-invalid @endif" id="content_name" name="content_name" placeholder="My Item" 
+                        <input type="text" class="form-control @if($errors->has('content_name')) is-invalid @endif" id="content_name" name="content_name" placeholder="My Item"
                         @if( $content ) value="{{ $content->name }}" @endif required/>
                   </div>
 
                   <div class="col-12 mb-5 pb-5">
                         <label for="description_input" class="form-label">Description</label>
-                        <div id="quill" data-name="content_description">@if( $content ){{ $content->description }}@endif</div> 
+                        <div id="quill" data-name="content_description" data-initial='@json($content->description ?? "")'></div>
                   </div>
                   <div class="col-12">
                         <label for="quantity_input" class="form-label">Quantity Available</label>
-                        <input type="text" class="form-control @if($errors->has('content_quantity')) is-invalid @endif" id="content_quantity" name="content_quantity" placeholder="1-20" 
+                        <input type="text" class="form-control @if($errors->has('content_quantity')) is-invalid @endif" id="content_quantity" name="content_quantity" placeholder="1-20"
                         @if( $content ) value="{{ $content->quantity_available }}" @endif />
                   </div>
                   <div class="col-12">
                         <label for="price_input" class="form-label">Price</label>
-                        <input type="text" class="form-control @if($errors->has('content_price')) is-invalid @endif" id="content_price" name="content_price" placeholder="20.00"  
+                        <input type="text" class="form-control @if($errors->has('content_price')) is-invalid @endif" id="content_price" name="content_price" placeholder="20.00"
                         @if( $content ) value="{{ $content->price }}" @endif />
                   </div>
                   <div class="col-12 my-5">
@@ -60,7 +63,11 @@
                   </div>
                   @foreach( $client->content_fields as $option )
                   <div class="col-12">
-                        {!! App\Logic\FormInputBuilder::getInstance()->setInput($option->input_type)->setName($option->name)->setValue($content && $content->has('content_values') ? $content->content_values : null )->build() !!}
+                        {!! app(\App\Services\ContentFieldInputBuilder::class)->render(
+                            $option->input_type,
+                            $option->name,
+                            $content?->content_values?->firstWhere('client_content_field_id', $option->id)?->value
+                        ) !!}
                   </div>
                   @endforeach
 

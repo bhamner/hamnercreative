@@ -2,137 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
+use App\Actions\Orders\CloneOrder;
+use App\Actions\Orders\DeleteOrder;
+use App\Actions\Orders\MarkOrderPaid;
+use App\Actions\Orders\StoreOrder;
+use App\Http\Requests\StoreOrderRequest;
+use App\Models\Client;
+use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     */
     public function __construct()
     {
-        $this->middleware(['auth','block.pending','filter.date','filter.client']);
+        $this->middleware(['auth', 'block.pending', 'filter.date', 'filter.client']);
     }
 
-
-    /**
-     * List user's orders
-     *
-     */
-    public function index( Request $request ): View 
-    {       
-        $gate = Gate::inspect('admin');
-        $orders = \App\Models\Order::whereBetween('created_at',$request->dates['params'])
-                                ->whereIn('client_id',  Auth::user()->clients()->pluck('id'))
-                                ->when($request->client, function($query) use ($request) {
-                                    return $query->where('client_id', $request->client->id);
-                                })->get();
-
-        return view('orders.index',compact('orders','gate'));
-    }
-
-
-    /**
-     * Show a form to create or update an order
-     *
-     */
-
-    public function edit(\App\Models\Order $order = null): view
+    public function index(Request $request, Client $client): View
     {
-        Gate::authorize('admin'); 
-        return view('orders.edit',compact('order'));
+        $this->authorize('view', $client);
+        $this->authorize('viewAny', Order::class);
+
+        $orders = Order::query()
+            ->whereBetween('created_at', $request->dates['params'])
+            ->where('client_id', $client->id)
+            ->get();
+
+        return view('orders.index', compact('orders', 'client'));
     }
 
-
-    /**
-     * Clone an existing order with service relations
-     *
-     */
-    public function clone( \App\Models\Order $order ): RedirectResponse
+    public function edit(?Order $order = null): View
     {
-        Gate::authorize('admin'); 
-        $new_order = $order->load('services')->replicate();
-        $new_order->status = "open";
-        $new_order->save();
- 
-        foreach( $order->services as $service ){
-            $new_service = $service->replicate();
-            $new_order->services()->save( $new_service );
+        if ($order) {
+            $this->authorize('update', $order);
+        } else {
+            $this->authorize('create', Order::class);
         }
-        
-        return back()->with('success', 'Order Cloned!');
-    } 
 
+        return view('orders.edit', compact('order'));
+    }
 
-    /**
-     * Mark order as paid
-     *
-     */
-    public function pay( \App\Models\Order $order ): RedirectResponse
+    public function store(StoreOrderRequest $request, StoreOrder $storeOrder): RedirectResponse
     {
-        Gate::authorize('admin'); 
-        $order->status = "paid";
-        $order->save();
- 
+        $this->authorize('create', Order::class);
+
+        $client = Client::query()->findOrFail($request->validated('order_client'));
+        $this->authorize('view', $client);
+
+        $order = null;
+        if ($request->filled('order_id')) {
+            $order = Order::query()->findOrFail($request->validated('order_id'));
+            $this->authorize('update', $order);
+        }
+
+        $storeOrder($request->validated(), $client, $order);
+
+        return redirect()->route('invoices.index', $client)->with('success', 'Order saved!');
+    }
+
+    public function clone(Order $order, CloneOrder $cloneOrder): RedirectResponse
+    {
+        $this->authorize('update', $order);
+        $cloneOrder($order);
+
+        return back()->with('success', 'Order Cloned!');
+    }
+
+    public function pay(Order $order, MarkOrderPaid $markOrderPaid): RedirectResponse
+    {
+        $this->authorize('update', $order);
+        $markOrderPaid($order);
+
         return back()->with('success', 'Payment Updated!');
     }
 
-    /**
-     * Store order and relations in database 
-     *
-     */
-    public function store(Request $request): RedirectResponse
+    public function delete(Order $order, DeleteOrder $deleteOrder): RedirectResponse
     {
-        Gate::authorize('admin'); 
-        $validated = $request->validate([
-            'order_title' => 'required|max:255',
-            'order_id' => 'nullable|numeric|exists:App\Models\Order,id',
-            'order_client'=> 'required|numeric|exists:App\Models\Client,id',
-            'order_status' => 'required|in:paid,open',
-            'service_name.*' => 'max:255',
-            'service_rate.*' => 'nullable|numeric',
-            'service_quantity.*' => 'nullable|numeric'
-        ]);
+        $this->authorize('delete', $order);
+        $deleteOrder($order);
 
-        $new_order = $request->has('order_id') ? \App\Models\Order::find( $request->get('order_id') ) : new \App\Models\Order();
-        $new_order->client_id = $request->get('order_client');
-        $new_order->name = $request->get('order_title');
-        $new_order->status = $request->get('order_status');
-        $new_order->save();
-
-        $requestData = collect($request->only('service_name', 'service_rate', 'service_quantity'));
-        $new_services = $requestData->transpose()->map(function ( $serviceData ) {
-            return new \App\Models\Service([
-                'name' => $serviceData['service_name'],
-                'rate' => $serviceData['service_rate'],
-                'quantity' => $serviceData['service_quantity'],
-            ]);
-        });
-        $new_order->services()->delete();
-        $new_order->services()->saveMany( $new_services );
- 
-        return redirect('/orders')->with('success', 'Order saved!');
-    }
-
-
-    /**
-     * Delete order and services
-     *
-     */
-    public function delete( \App\Models\Order $order ): RedirectResponse
-    {
-        Gate::authorize('admin'); 
-        $order->services()->delete();
-        $order->delete();
- 
         return back()->with('success', 'Order Deleted!');
     }
-
-
 }

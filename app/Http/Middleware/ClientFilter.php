@@ -1,34 +1,29 @@
-<?php 
+<?php
+
 namespace App\Http\Middleware;
 
-use Auth;
+use App\Services\ClientResolver;
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
+class ClientFilter
+{
+    public function __construct(private ClientResolver $clientResolver)
+    {
+    }
 
-class ClientFilter{
- 
- 	/**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-	public function handle($request, Closure $next): Response
-	{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $user = Auth::user();
+        $clients = $user->clients;
+        $client = $this->clientResolver->resolve($user, $request, $clients);
 
-        $clients = Auth::user()->clients;
- 
-        $client = \App\Logic\Helper::getCurrentClient($request,$clients);
- 
-  	   //add to request to share with controller
-        $request->merge( compact('clients','client') );
- 
-        //share with view
-        \View::share( compact('clients','client') );
-		 
-	    return $next($request);
-	}
- 
+        $request->merge(compact('clients', 'client'));
+        View::share(compact('clients', 'client'));
 
-
+        return $next($request);
+    }
 }

@@ -2,32 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
+use App\Models\Order;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     */
     public function __construct()
     {
-        $this->middleware(['auth','block.pending']);
+        $this->middleware(['auth', 'block.pending']);
     }
 
+    public function show(Order $order): View
+    {
+        $this->authorize('view', $order);
 
-    /**
-     * Show invoice
-     *
-     */
-    public function show( Request $request, \App\Models\Order $order ): View 
-    {       
-        return view('invoice.show',compact('order'));
+        return view('invoice.show', compact('order'));
     }
-
-
 }

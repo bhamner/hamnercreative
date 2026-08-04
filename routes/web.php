@@ -1,57 +1,50 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientHomeRedirectController;
+use App\Http\Controllers\ContentController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LeadsController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SetupController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-|
-*/
+Route::view('/', 'home.welcome')->name('welcome');
 
+Route::get('/auth/google', [AuthController::class, 'redirectToProvider'])->name('login');
+Route::get('/auth/callback', [AuthController::class, 'handleProviderResponse']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//Home
-Route::view('/','home.welcome')->name('welcome');
+Route::get('/setup', [SetupController::class, 'gate']);
+Route::post('/validate', [SetupController::class, 'validateCode']);
 
-//Authentication
-Route::get('/auth/google','\App\Http\Controllers\AuthController@redirectToProvider')->name('login');
-Route::get('/auth/callback','\App\Http\Controllers\AuthController@handleProviderResponse');
-Route::any('/logout', '\App\Http\Controllers\AuthController@logout')->name('logout');
+Route::get('/user', [UserController::class, 'show'])->name('user.show');
+Route::post('/user/delete', [UserController::class, 'delete'])->name('user.delete');
 
-//Setup
-Route::get('/setup','\App\Http\Controllers\SetupController@gate');
-Route::post('/validate','\App\Http\Controllers\SetupController@validateCode');
+Route::get('/clients/{client}/metrics', [AdminController::class, 'showUserDashboard'])->name('metrics.show');
+Route::get('/clients/{client}/invoices', [OrderController::class, 'index'])->name('invoices.index');
+Route::get('/clients/{client}/content', [ContentController::class, 'index'])->name('content.index');
+Route::get('/clients/{client}/leads', [LeadsController::class, 'index'])->name('leads.index');
 
-//Admin
-Route::get('/dashboard', '\App\Http\Controllers\AdminController@showUserDashboard');
+Route::get('/order/edit/{order?}', [OrderController::class, 'edit'])->name('orders.edit');
+Route::post('/order/update', [OrderController::class, 'store'])->name('orders.store');
+Route::post('/order/clone/{order}', [OrderController::class, 'clone'])->name('orders.clone');
+Route::post('/order/pay/{order}', [OrderController::class, 'pay'])->name('orders.pay');
+Route::post('/order/delete/{order}', [OrderController::class, 'delete'])->name('orders.delete');
 
-//User Account
-Route::get('/user', '\App\Http\Controllers\UserController@show');
-Route::post('/user/delete/{user}', '\App\Http\Controllers\UserController@delete');
- 
-//Orders
-Route::get('/orders', '\App\Http\Controllers\OrderController@index');
-Route::get('/order/clone/{order}','\App\Http\Controllers\OrderController@clone');
-Route::get('/order/pay/{order}','\App\Http\Controllers\OrderController@pay');
-Route::get('/order/edit/{order?}','\App\Http\Controllers\OrderController@edit');
-Route::post('/order/update','\App\Http\Controllers\OrderController@store');
-Route::get('/order/delete/{order}','\App\Http\Controllers\OrderController@delete');
+Route::get('/invoice/{order}', [InvoiceController::class, 'show'])->name('invoices.show');
 
-//Invoices
-Route::get('/invoice/{order}', '\App\Http\Controllers\InvoiceController@show');
+Route::get('/content/{client}/edit/{content?}', [ContentController::class, 'edit'])->name('content.edit');
+Route::post('/content/update', [ContentController::class, 'store'])->name('content.store');
+Route::post('/content/delete/{content}', [ContentController::class, 'delete'])->name('content.delete');
 
-//Content
-Route::get('/content', '\App\Http\Controllers\ContentController@index');
-Route::get('/content/{client}/edit/{content?}','\App\Http\Controllers\ContentController@edit');
-Route::post('/content/update','\App\Http\Controllers\ContentController@store');
-Route::get('/content/delete/{content}','\App\Http\Controllers\ContentController@delete');
+Route::get('/dashboard', [ClientHomeRedirectController::class, 'metrics'])->name('dashboard');
+Route::get('/orders', [ClientHomeRedirectController::class, 'invoices'])->name('orders.index');
+Route::get('/content', [ClientHomeRedirectController::class, 'content']);
+Route::get('/leads', [ClientHomeRedirectController::class, 'leads']);
 
-//Form Generated Leads
-Route::get('/leads', '\App\Http\Controllers\LeadsController@index');
-
-//legal
-Route::view('/privacy','legal.privacy');
-Route::view('/terms','legal.terms');
-Route::view('/cookies','legal.cookies');
-
+Route::view('/privacy', 'legal.privacy');
+Route::view('/terms', 'legal.terms');
+Route::view('/cookies', 'legal.cookies');

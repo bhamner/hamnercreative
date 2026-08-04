@@ -2,38 +2,38 @@
 
 namespace App\Providers;
 
-use App;
-use Auth;
+use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
+    public function boot(UrlGenerator $urlGenerator): void
     {
-
-        if ( App::environment('production') ) {
-            $urlGenerator->forceScheme("https");
+        if (App::environment('production')) {
+            $urlGenerator->forceScheme('https');
         }
 
-        Gate::define('admin', function ( \App\Models\User $user ) {
-            return $user->clients->count() > 1;
-        });
+        Collection::macro('transpose', function () {
+            /** @var Collection<array-key, mixed> $collection */
+            $collection = $this;
 
-        Gate::define('user_has_client', function ( \App\Models\User $user,  $request ) {
-            return ( !$request->has('client') || $request->has('client') && Auth::check() &&  Auth::user()->clients->contains( $request->client ) );
-        });
+            $keys = $collection->keys()->all();
+            $values = $collection->values()->all();
 
+            $items = array_map(function (...$row) use ($keys) {
+                if (array_filter($row)) {
+                    return array_combine($keys, $row);
+                }
+            }, ...$values);
+
+            return new static(array_filter($items));
+        });
     }
 }

@@ -12,31 +12,63 @@
 }
 
 /******** SIDEBAR ********/
-  
-@media (min-width: 768px) {
-    .sidebar{
-       min-height: 100vh;
-    }
-    .sidebar .offcanvas-lg {
-      position: -webkit-sticky;
-      position: sticky;
-      top: 48px;
-    }
-    .navbar-search {
-      display: block;
-    }
+
+/* Mobile/tablet offcanvas (below lg) */
+@media (max-width: 991.98px) {
+  #sidebarMenu.offcanvas {
+    width: min(85vw, 300px);
+  }
+
+  .app-layout .container-fluid {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }
 
-.sidebar .nav-link {
+.app-sidebar {
+  min-height: calc(100vh - 48px);
+  overflow-x: hidden;
+}
+
+.app-sidebar-inner {
+  position: sticky;
+  top: 48px;
+  max-height: calc(100vh - 48px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.offcanvas#sidebarMenu .offcanvas-body {
+  overflow-x: hidden;
+}
+
+.app-sidebar .nav-link,
+.offcanvas#sidebarMenu .nav-link {
   font-size: .875rem;
   font-weight: 500;
-  color:#333;
+  color: #333;
+  min-width: 0;
+  overflow: hidden;
 }
-
- 
 
 .sidebar-heading {
   font-size: .75rem;
+}
+
+.app-client-nav > .nav-item > .nav-link {
+  padding-right: .5rem;
+}
+
+.app-client-nav .client-nav-chevron {
+  transition: transform .15s ease-in-out;
+}
+
+.app-client-nav > .nav-item > .nav-link[aria-expanded="true"] .client-nav-chevron {
+  transform: rotate(90deg);
+}
+
+.app-client-nav .collapse .nav-link {
+  font-weight: 400;
 }
 
 /******** NAVBAR ********/
@@ -49,6 +81,50 @@
 
 .navbar .form-control {
   padding: .75rem 1rem;
+}
+
+/* Backend header: keep dropdown overlaying content, not expanding bar height */
+.app-header {
+  flex-wrap: nowrap !important;
+  overflow: visible;
+}
+
+.app-header .app-header-nav {
+  flex-wrap: nowrap;
+  overflow: visible;
+}
+
+.app-header .dropdown {
+  position: relative;
+}
+
+.app-header .navbar-nav .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: auto;
+  z-index: 1050;
+}
+
+.app-header-date-filter .form-select {
+  min-width: 8.5rem;
+  max-width: 11rem;
+  color: #fff;
+  background-color: rgba(255, 255, 255, .08);
+  border-color: rgba(255, 255, 255, .25);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.app-header-date-filter .form-select:focus {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .45);
+  box-shadow: 0 0 0 .2rem rgba(255, 255, 255, .15);
+}
+
+.app-header-date-filter .form-select option {
+  color: #212529;
+  background-color: #fff;
 }
 
 /******** FORMS ********/
@@ -127,7 +203,5 @@ table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before,
 table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after{
   opacity:0.3;
 }
- 
 
  
-  

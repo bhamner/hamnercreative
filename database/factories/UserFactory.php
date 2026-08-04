@@ -23,10 +23,18 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'vendor_id' => Str::random(20),
+            'vendor_id' => (string) fake()->unique()->numerify('####################'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
+            'is_admin' => false,
         ];
+    }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_admin' => true,
+        ]);
     }
 
     /**

@@ -2,8 +2,11 @@
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
 // Font Awesome
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import '@fortawesome/fontawesome-free/scss/regular.scss';
+$fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/regular"; 
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+
 
 // Variables
 @import 'variables';

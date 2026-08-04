@@ -45,10 +45,6 @@ import.meta.glob([
   '../images/**',
 ]);
 
-//gumshoe
-const gumshoe = import ('gumshoejs/dist/gumshoe.min.js');
-window.gumshoe = gumshoe;
-
 //tinyslider
 import { tns } from 'tiny-slider/src/tiny-slider'; 
 window.tns = tns;

@@ -12,35 +12,19 @@
          </div>
       </div>
 
-      <div class="parallax-window active" id="header" data-parallax="scroll"
+      <div class="parallax-window active hero-fullscreen" id="header" data-parallax="scroll"
          data-image-src="{{ Vite::asset('resources/images/1bg.jpg') }}" >
-         <div class="container">
-            <div class="row">
+         <div class="container h-100">
+            <div class="row h-100">
               <div class="col-lg-12 col-xs-12">
-               <!-- Navbar -->
                @include('home.navigation')
-               <!-- Header Section -->
                @include('home.header')
-              </div>   
+              </div>
             </div>
+         </div>
+         <div class="hero-footer">
+            @include('home.footer')
          </div>
       </div>
 
-      <div class="main-wrapper">
-         <!-- About Section -->
-         @include('home.about')   
-         <!-- Portfolio Section -->
-         @include('home.portfolio')
-         <!-- Contact Section -->
-         @include('home.contact_form')
-         <!-- Footer Section -->
-        @include('home.footer')
-      </div>
-      
 @endsection
-
-
-
-
-
-

@@ -14,7 +14,7 @@
       </div>
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
-          <form method="post" action="/user/delete/{{ Auth::user()->id }}">
+          <form method="POST" action="{{ route('user.delete') }}">
             <div class="mb-3">
               @csrf
               <label for="deleteConfirmationCode" class="form-label"> Type the following code to allow this action: <span id="deleteCode">{{ substr(Auth::user()->vendor_id, 0, 5) }}</span> </label>
